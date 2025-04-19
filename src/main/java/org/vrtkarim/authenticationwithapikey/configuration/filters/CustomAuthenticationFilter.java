@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.vrtkarim.authenticationwithapikey.configuration.authentication.CustomAuthentication;
 import org.vrtkarim.authenticationwithapikey.configuration.managers.CustomAuthenticationManager;
 
 import java.io.IOException;
@@ -30,10 +31,9 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         // get back the authentication from the manager
 
         //if the object is authenticated then send request to the next filter in the chain
-
-
-
-        var a = customAuthenticationManager.authenticate(null);
+        String key = String.valueOf(request.getHeader("key"));
+        CustomAuthentication customAuthentication = new CustomAuthentication(false,key);
+        var a = customAuthenticationManager.authenticate(customAuthentication);
         if(a.isAuthenticated()){
 
             SecurityContextHolder.getContext().setAuthentication(a);
